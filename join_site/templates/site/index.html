@@ -1,59 +1,89 @@
-{% extends 'site/base.html' %}
-{% load static %}
-{% block content %}
-    <h1>Alvos</h1>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTarget">
-      Incluir Novo alvo
-    </button>
+{% extends 'site/base.html' %} {% load static %} {% block content %}
+<h1>Alvos</h1>
+<button
+  type="button"
+  class="btn btn-primary"
+  data-bs-toggle="modal"
+  data-bs-target="#newTarget"
+>
+  Incluir Novo alvo
+</button>
 
-    <div id="map"></div>
+<div id="map"></div>
 
-    <!-- Modal -->
-    <div class="modal fade" id="newTarget" tabindex="-1" aria-labelledby="newTargetLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <form method="POST">
-              {% csrf_token %}
-              <div class="modal-body">
-                {{ form.as_p }}
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Salvar</button>
-              </div>
-          </form>
-        </div>
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="newTarget"
+  tabindex="-1"
+  aria-labelledby="newTargetLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Alvo</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
+      <form method="POST" id="targetForm">
+        {% csrf_token %}
+        <input type="hidden" id="id_target" value="" />
+        <div class="modal-body">{{ form.as_p }}</div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            data-bs-dismiss="modal"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
     </div>
+  </div>
+</div>
 
-    <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArKp-vFEVUrCqDc8D9eNwwTWCzRnlaMQ8="
-    ></script>
-    <script>
-        const center_map = new google.maps.LatLng(-18.8800397, -47.05878999999999);
-         const map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 4,
-            center: center_map,
-         });
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArKp-vFEVUrCqDc8D9eNwwTWCzRnlaMQ8="></script>
+<script>
+  const center_map = new google.maps.LatLng(-18.8800397, -47.05878999999999);
+  const map = new google.maps.Map(document.getElementById("map"), {
+    zoom: 4,
+    center: center_map,
+  });
 
-        const data = JSON.parse("{{target|escapejs}}");
-        console.log(data)
-        data.map(item => {
-            let latlng = new google.maps.LatLng(item.latitude, item.longitude);
-            let marker = new google.maps.Marker({
-                position: latlng,
-                map: map,
-                title: item.name
-            });
+  const data = JSON.parse("{{target|escapejs}}");
+  data.map((item) => {
+    let latlng = new google.maps.LatLng(item.latitude, item.longitude);
+    let marker = new google.maps.Marker({
+      position: latlng,
+      map: map,
+      title: item.name,
+    });
 
-            marker.addListener("click", () => {
-                console.log(marker.getPosition())
-            });
-        });
+    marker.addListener("click", () => {
+      $("#id_name").val(item.name);
+      $("#id_latitude").val(item.latitude);
+      $("#id_longitude").val(item.longitude);
+      $("#id_target").val(item.id);
 
-    </script>
+      $("#targetForm").attr("action", "/" + item.id);
+
+      $("#newTarget").modal("show");
+    });
+  });
+
+  $("#newTarget").on("hidden.bs.modal", function () {
+    $("#id_name").val("");
+    $("#id_latitude").val("");
+    $("#id_longitude").val("");
+    $("#id_target").val("");
+    $("#targetForm").attr("action", "");
+  });
+</script>
 {% endblock %}

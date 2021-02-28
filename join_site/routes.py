@@ -5,4 +5,5 @@ from join_site import views
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('<int:pk>', views.update, name='update'),
 ]
