@@ -4,5 +4,5 @@ from join_site import views
 
 
 urlpatterns = [
-    path('', views.index),
+    path('', views.index, name='index'),
 ]

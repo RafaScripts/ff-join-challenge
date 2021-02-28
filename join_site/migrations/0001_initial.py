@@ -21,7 +21,6 @@ class Migration(migrations.Migration):
                 ('longitude', models.CharField(max_length=255)),
                 ('expiration_date', models.DateField(null=True)),
                 ('created_date', models.DateTimeField(default=django.utils.timezone.now)),
-                ('published_date', models.DateTimeField(blank=True, null=True)),
             ],
         ),
     ]
