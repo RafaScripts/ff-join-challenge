@@ -2,12 +2,14 @@
 {% load static %}
 {% block content %}
     <h1>Alvos</h1>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newTarget">
       Incluir Novo alvo
     </button>
 
+    <div id="map"></div>
+
     <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="newTarget" tabindex="-1" aria-labelledby="newTargetLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -24,9 +26,34 @@
                 <button type="submit" class="btn btn-primary">Salvar</button>
               </div>
           </form>
-
         </div>
       </div>
     </div>
 
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArKp-vFEVUrCqDc8D9eNwwTWCzRnlaMQ8="
+    ></script>
+    <script>
+        const center_map = new google.maps.LatLng(-18.8800397, -47.05878999999999);
+         const map = new google.maps.Map(document.getElementById("map"), {
+            zoom: 4,
+            center: center_map,
+         });
+
+        const data = JSON.parse("{{target|escapejs}}");
+        console.log(data)
+        data.map(item => {
+            let latlng = new google.maps.LatLng(item.latitude, item.longitude);
+            let marker = new google.maps.Marker({
+                position: latlng,
+                map: map,
+                title: item.name
+            });
+
+            marker.addListener("click", () => {
+                console.log(marker.getPosition())
+            });
+        });
+
+    </script>
 {% endblock %}

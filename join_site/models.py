@@ -10,4 +10,4 @@ class Target(models.Model):
     created_date = models.DateTimeField(default=timezone.now)
 
     def __str__(self):
-        return self.login
+        return self.name
