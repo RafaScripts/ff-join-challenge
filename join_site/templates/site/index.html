@@ -34,8 +34,10 @@
         {% csrf_token %}
         <input type="hidden" id="id_target" value="" />
         <div class="modal-body">{{ form.as_p }}</div>
-        <div class="modal-footer">
+        <div class="modal-footer" id="modal-footer">
+            
           <button
+            id="btn_close"
             type="button"
             class="btn btn-secondary"
             data-bs-dismiss="modal"
@@ -74,6 +76,8 @@
 
       $("#targetForm").attr("action", "/" + item.id);
 
+      $(`<a href="/${item.id}/delete" class="btn btn-danger" id="btn_remove">  Excluir </a>`).insertBefore("#btn_close")
+
       $("#newTarget").modal("show");
     });
   });
@@ -84,6 +88,7 @@
     $("#id_longitude").val("");
     $("#id_target").val("");
     $("#targetForm").attr("action", "");
+    $("#btn_remove").remove()
   });
 </script>
 {% endblock %}

@@ -38,3 +38,8 @@ def update(request, pk):
         serializer.save()
 
     return HttpResponseRedirect(reverse('index'))
+
+@api_view(('GET',))
+def delete(request, pk):
+    target = Target.objects.get(pk=pk).delete()
+    return HttpResponseRedirect(reverse('index'))
