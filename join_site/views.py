@@ -1,3 +1,4 @@
+import os
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from rest_framework.decorators import api_view, renderer_classes
@@ -13,6 +14,7 @@ from .serializers import TargetSerializer
 @api_view(('GET', 'POST'))
 @renderer_classes((TemplateHTMLRenderer, JSONRenderer))
 def index(request):
+    google_key = os.getenv('GOOGLE_KEY')
     form = TargetForm()
 
     if request.method == "POST":
@@ -24,7 +26,8 @@ def index(request):
     data_json = dumps(serializer.data)
     context = {
         'form': form,
-        'target': data_json
+        'target': data_json,
+        'google_key': google_key
     }
 
     return Response(context, template_name='site/index.html')
